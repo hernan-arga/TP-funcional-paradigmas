@@ -1,6 +1,11 @@
+
+
 --PUNTO 3.1
 data Microprocesador = Microprocesador {memoriaDeDatos :: [Int], acumuladorA :: Int, acumuladorB :: Int, programCounter :: Int, etiqueta :: String} deriving(Show)
-xt8088 = Microprocesador {memoriaDeDatos=[], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = ""}
+{-	Criterios:
+
+memoriaDeDatos: "una gran cantidad de posiciones" no me indica la cantidad de posiciones por lo que tomamos como una lista de enteros-}
+xt8088 = Microprocesador {memoriaDeDatos=[], acumuladorA = 3, acumuladorB = 2, programCounter = 0, etiqueta = ""}
 
 --PUNTO 3.2.1
 nop unMicro = unMicro {programCounter = programCounter unMicro + 1} 
@@ -11,7 +16,10 @@ nop unMicro = unMicro {programCounter = programCounter unMicro + 1}
 --PUNTO 3.3.1
 lodv val unMicro = unMicro {acumuladorA = val}
 
-swap = (modificarAcumuladorA.modificarAcumuladorB).nop
 
-modificarAcumuladorA unMicro = unMicro {acumuladorA = acumuladorB unMicro}
-modificarAcumuladorB unMicro = unMicro {acumuladorB = acumuladorA unMicro}
+swap = nop.intercambiarValores
+
+crearTupla unMicro = (acumuladorA unMicro, acumuladorB unMicro)
+intercambiarValores unMicro = unMicro {acumuladorA = snd (crearTupla unMicro), acumuladorB = fst (crearTupla unMicro)}
+
+--add = sumarAcumuladores 
