@@ -1,25 +1,65 @@
+--     TP Funcional 2018 - Microprocesador - Primera entrega
+--     Paradigmas de Programación
+--     Realizado por: 
+--					del Burgo, María Abril
+--					Gagliardi, Diego
+--					Laye, Matías
+--					Rodríguez Cary, Hernán
 
-
+module MicroEntrega1 where
+	
 --PUNTO 3.1
-data Microprocesador = Microprocesador {memoriaDeDatos :: [Int], acumuladorA :: Int, acumuladorB :: Int, programCounter :: Int, etiqueta :: String} deriving(Show)
-{-	Criterios:
-
-memoriaDeDatos: "una gran cantidad de posiciones" no me indica la cantidad de posiciones por lo que tomamos como una lista de enteros-}
-xt8088 = Microprocesador {memoriaDeDatos=[], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = ""}
+data Microprocesador = Microprocesador { memoriaDeDatos :: [Int], a :: Int, b :: Int, pc :: Int, etiqueta :: String } deriving(Show)
+xt8088 = Microprocesador { memoriaDeDatos=[], a = 0, b = 0, pc = 0, etiqueta = "" }
 
 --PUNTO 3.2.1
-nop unMicro = unMicro {programCounter = programCounter unMicro + 1} 
+nop unMicrocontrolador = unMicrocontrolador {pc = pc unMicrocontrolador + 1} 
 
 --PUNTO 3.2.2
---avanzarTresVecesProgramCounter = 
+avanzarTresVecespc = nop.nop.nop
 
 --PUNTO 3.3.1
-lodv val unMicro = unMicro {acumuladorA = val}
-
+lodv val = nop.cargarValorEna val
+cargarValorEna val unMicrocontrolador = unMicrocontrolador {a = val}
 
 swap = nop.intercambiarValores
+intercambiarValores unMicrocontrolador = unMicrocontrolador {a = snd (crearTupla unMicrocontrolador), b = fst (crearTupla unMicrocontrolador)}
+crearTupla unMicrocontrolador = (a unMicrocontrolador, b unMicrocontrolador)
 
-crearTupla unMicro = (acumuladorA unMicro, acumuladorB unMicro)
-intercambiarValores unMicro = unMicro {acumuladorA = snd (crearTupla unMicro), acumuladorB = fst (crearTupla unMicro)}
+add = nop.sumarValores
+sumarValores unMicrocontrolador = unMicrocontrolador {a = (b unMicrocontrolador + a unMicrocontrolador), b = 0}
 
---add = sumarAcumuladores 
+--PUNTO 3.3.2
+sumar10mas22 = add.lodv 22.swap.lodv 10
+
+--PUNTO 3.4.1
+divide = nop.dividirAcumuladores
+--dividirAcumuladores unMicrocontrolador | esCero (crearTupla unMicrocontrolador) = unMicrocontrolador {etiqueta = "ERROR DIVISION POR CERO"} | otherwise = unMicrocontrolador {a = quot (a unMicrocontrolador) (b unMicrocontrolador), b = 0}
+-- esCero (_,0) = True 
+-- esCero _ = False
+
+dividirAcumuladores unMicrocontrolador | (obtenerb unMicrocontrolador) == 0 = unMicrocontrolador {etiqueta = "ERROR DIVISION BY ZERO"} | otherwise =  unMicrocontrolador { a = quot (a unMicrocontrolador) (b unMicrocontrolador), b = 0} 
+obtenerb unMicrocontrolador = (b unMicrocontrolador)
+
+str addr val = nop.guardarValorEnMemoria addr val
+guardarValorEnMemoria addr val unMicrocontrolador = unMicrocontrolador { memoriaDeDatos = ( take (addr-1) (memoriaDeDatos unMicrocontrolador) ) ++ [val] ++ ( drop addr (memoriaDeDatos unMicrocontrolador) )}
+
+lod addr = nop.cargaraDesdeMemoria addr
+cargaraDesdeMemoria addr unMicrocontrolador = unMicrocontrolador { a = (memoriaDeDatos unMicrocontrolador) !! (addr-1) }
+
+--PUNTO 3.4.2
+dividir2por0 = divide . lod 1 . swap . lod 2 . str 2 0 . str 1 2
+
+
+-- CASOS DE PRUEBA 
+fp20 = Microprocesador {memoriaDeDatos=[], a = 7, b = 24, pc = 0, etiqueta = ""}
+at8086 = Microprocesador {memoriaDeDatos=[1..20], a = 0, b = 0, pc = 0, etiqueta = ""}
+dividir12por4 = divide . lod 1 . swap . lod 2 . str 2 4 . str 1 12
+testxt8088 = Microprocesador { memoriaDeDatos= (replicate 1024 0), a = 0, b = 0, pc = 0, etiqueta = ""}
+
+-- RESTRICCIONES
+programCounter unMicrocontrolador = pc unMicrocontrolador
+acumuladorA unMicrocontrolador = a unMicrocontrolador
+acumuladorB unMicrocontrolador = b unMicrocontrolador
+memoria unMicrocontrolador = memoriaDeDatos unMicrocontrolador
+mensajeError unMicrocontrolador = etiqueta unMicrocontrolador
