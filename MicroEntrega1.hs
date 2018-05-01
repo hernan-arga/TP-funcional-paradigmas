@@ -5,7 +5,7 @@ data Microprocesador = Microprocesador {memoriaDeDatos :: [Int], acumuladorA :: 
 {-	Criterios:
 
 memoriaDeDatos: "una gran cantidad de posiciones" no me indica la cantidad de posiciones por lo que tomamos como una lista de enteros-}
-xt8088 = Microprocesador {memoriaDeDatos=[], acumuladorA = 3, acumuladorB = 2, programCounter = 0, etiqueta = ""}
+xt8088 = Microprocesador {memoriaDeDatos=[], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = ""}
 
 --PUNTO 3.2.1
 nop unMicro = unMicro {programCounter = programCounter unMicro + 1} 
