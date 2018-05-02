@@ -9,13 +9,13 @@
 module MicroEntrega1 where
 
 --PUNTO 3.1
-data Microprocesador = Microprocesador { memoriaDeDatos :: [Int], a :: Int, b :: Int, pc :: Int, etiqueta :: String } deriving(Show)
+data Microprocesador = Microprocesador { memoriaDeDatos :: [Int], acumuladorA :: Int, acumuladorB :: Int, programCounter :: Int, etiqueta :: String } deriving(Show)
 
-xt8088 = Microprocesador { memoriaDeDatos=[], a = 0, b = 0, pc = 0, etiqueta = "" }
+xt8088 = Microprocesador { memoriaDeDatos=[], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "" }
 
 --PUNTO 3.2.1
 nop :: Microprocesador -> Microprocesador
-nop unMicrocontrolador = unMicrocontrolador {pc = pc unMicrocontrolador + 1} 
+nop unMicrocontrolador = unMicrocontrolador {programCounter = programCounter unMicrocontrolador + 1} 
 
 --PUNTO 3.2.2
 avanzarTresVecespc :: Microprocesador -> Microprocesador
@@ -26,23 +26,23 @@ lodv :: Int -> Microprocesador -> Microprocesador
 lodv val = nop.cargarValorEna val
 
 cargarValorEna :: Int -> Microprocesador -> Microprocesador
-cargarValorEna val unMicrocontrolador = unMicrocontrolador {a = val}
+cargarValorEna val unMicrocontrolador = unMicrocontrolador {acumuladorA = val}
 
 swap :: Microprocesador -> Microprocesador
 swap = nop.intercambiarValores
 
 intercambiarValores :: Microprocesador -> Microprocesador
-intercambiarValores unMicrocontrolador = unMicrocontrolador {a = snd (crearTupla unMicrocontrolador), b = fst (crearTupla unMicrocontrolador)}
+intercambiarValores unMicrocontrolador = unMicrocontrolador {acumuladorA = snd (crearTupla unMicrocontrolador), acumuladorB = fst (crearTupla unMicrocontrolador)}
 
 crearTupla :: Microprocesador -> (Int, Int)
-crearTupla unMicrocontrolador = (a unMicrocontrolador, b unMicrocontrolador)
+crearTupla unMicrocontrolador = (acumuladorA unMicrocontrolador, acumuladorB unMicrocontrolador)
 
 
 add :: Microprocesador -> Microprocesador
 add = nop.sumarValores
 
 sumarValores :: Microprocesador -> Microprocesador
-sumarValores unMicrocontrolador = unMicrocontrolador {a = b unMicrocontrolador + a unMicrocontrolador, b = 0}
+sumarValores unMicrocontrolador = unMicrocontrolador {acumuladorA = acumuladorB unMicrocontrolador + acumuladorA unMicrocontrolador, acumuladorB = 0}
 
 --PUNTO 3.3.2
 sumar10mas22 :: Microprocesador -> Microprocesador
@@ -54,8 +54,8 @@ divide = nop.dividirAcumuladores
 
 dividirAcumuladores :: Microprocesador -> Microprocesador
 dividirAcumuladores unMicrocontrolador
-    | (b unMicrocontrolador) == 0 = unMicrocontrolador {etiqueta = "ERROR DIVISION BY ZERO"} 
-    | otherwise =  unMicrocontrolador { a = quot (a unMicrocontrolador) (b unMicrocontrolador), b = 0} 
+    | (acumuladorB unMicrocontrolador) == 0 = unMicrocontrolador {etiqueta = "ERROR DIVISION BY ZERO"} 
+    | otherwise =  unMicrocontrolador { acumuladorA = quot (acumuladorA unMicrocontrolador) (acumuladorB unMicrocontrolador), acumuladorB = 0} 
 
 str :: Int -> Int -> Microprocesador -> Microprocesador
 str addr val = nop.guardarValorEnMemoria addr val
@@ -67,7 +67,7 @@ lod :: Int -> Microprocesador -> Microprocesador
 lod addr = nop.cargaraDesdeMemoria addr
 
 cargaraDesdeMemoria :: Int -> Microprocesador -> Microprocesador
-cargaraDesdeMemoria addr unMicrocontrolador = unMicrocontrolador { a = (memoriaDeDatos unMicrocontrolador) !! (addr-1) }
+cargaraDesdeMemoria addr unMicrocontrolador = unMicrocontrolador { acumuladorA = (memoriaDeDatos unMicrocontrolador) !! (addr-1) }
 
 --PUNTO 3.4.2
 dividir2por0 :: Microprocesador -> Microprocesador
@@ -75,23 +75,24 @@ dividir2por0 = divide.lod 1.swap.lod 2.str 2 0.str 1 2
 
 
 -- CASOS DE PRUEBA 
-fp20 = Microprocesador {memoriaDeDatos=[], a = 7, b = 24, pc = 0, etiqueta = ""}
+fp20 = Microprocesador {memoriaDeDatos=[], acumuladorA = 7, acumuladorB = 24, programCounter = 0, etiqueta = ""}
 
-at8086 = Microprocesador {memoriaDeDatos=[1..20], a = 0, b = 0, pc = 0, etiqueta = ""}
+at8086 = Microprocesador {memoriaDeDatos=[1..20], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = ""}
 
 dividir12por4 :: Microprocesador -> Microprocesador
 dividir12por4 = divide . lod 1 . swap . lod 2 . str 2 4 . str 1 12
-testxt8088 = Microprocesador { memoriaDeDatos= replicate 1024 0, a = 0, b = 0, pc = 0, etiqueta = ""}
+testxt8088 = Microprocesador { memoriaDeDatos= replicate 1024 0, acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = ""}
 
 
 -- RESTRICCIONES
+{-
 programCounter :: Microprocesador -> Int
-programCounter unMicrocontrolador = pc unMicrocontrolador
+programCounter unMicrocontrolador = programCounter unMicrocontrolador
 acumuladorA :: Microprocesador -> Int
-acumuladorA unMicrocontrolador = a unMicrocontrolador
+acumuladorA unMicrocontrolador = acumuladorA unMicrocontrolador
 acumuladorB :: Microprocesador -> Int
-acumuladorB unMicrocontrolador = b unMicrocontrolador
+acumuladorB unMicrocontrolador = acumuladorB unMicrocontrolador
 memoria :: Microprocesador -> [Int]
 memoria unMicrocontrolador = memoriaDeDatos unMicrocontrolador
 mensajeError :: Microprocesador -> String
-mensajeError unMicrocontrolador = etiqueta unMicrocontrolador
+mensajeError unMicrocontrolador = etiqueta unMicrocontrolador-}
