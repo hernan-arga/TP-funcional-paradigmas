@@ -32,7 +32,7 @@ swap :: Microprocesador -> Microprocesador
 swap = nop.intercambiarValores
 
 intercambiarValores :: Microprocesador -> Microprocesador
-intercambiarValores unMicrocontrolador = unMicrocontrolador {acumuladorA = snd (crearTupla unMicrocontrolador), acumuladorB = fst (crearTupla unMicrocontrolador)}
+intercambiarValores unMicrocontrolador = unMicrocontrolador {acumuladorA = acumuladorB unMicrocontrolador, acumuladorB = acumuladorA unMicrocontrolador}
 
 crearTupla :: Microprocesador -> (Int, Int)
 crearTupla unMicrocontrolador = (acumuladorA unMicrocontrolador, acumuladorB unMicrocontrolador)
@@ -82,17 +82,3 @@ at8086 = Microprocesador {memoriaDeDatos=[1..20], acumuladorA = 0, acumuladorB =
 dividir12por4 :: Microprocesador -> Microprocesador
 dividir12por4 = divide . lod 1 . swap . lod 2 . str 2 4 . str 1 12
 testxt8088 = Microprocesador { memoriaDeDatos= replicate 1024 0, acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = ""}
-
-
--- RESTRICCIONES
-{-
-programCounter :: Microprocesador -> Int
-programCounter unMicrocontrolador = programCounter unMicrocontrolador
-acumuladorA :: Microprocesador -> Int
-acumuladorA unMicrocontrolador = acumuladorA unMicrocontrolador
-acumuladorB :: Microprocesador -> Int
-acumuladorB unMicrocontrolador = acumuladorB unMicrocontrolador
-memoria :: Microprocesador -> [Int]
-memoria unMicrocontrolador = memoriaDeDatos unMicrocontrolador
-mensajeError :: Microprocesador -> String
-mensajeError unMicrocontrolador = etiqueta unMicrocontrolador-}
