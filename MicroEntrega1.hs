@@ -61,13 +61,13 @@ str :: Posicion -> Valor -> Microprocesador -> Microprocesador
 str addr val = nop.guardarValorEnMemoria addr val
 
 guardarValorEnMemoria :: Posicion -> Valor -> Microprocesador -> Microprocesador
-guardarValorEnMemoria addr val unMicrocontrolador = unMicrocontrolador { memoriaDeDatos = ( take (addr-1) (memoriaDeDatos unMicrocontrolador) ) ++ [val] ++ ( drop (addr-1) (memoriaDeDatos unMicrocontrolador) )}
+guardarValorEnMemoria addr val unMicrocontrolador = unMicrocontrolador { memoriaDeDatos = ( take addr (memoriaDeDatos unMicrocontrolador) ) ++ [val] ++ ( drop addr (memoriaDeDatos unMicrocontrolador) )}
 
 lod :: Posicion -> Microprocesador -> Microprocesador
 lod addr = nop.cargaraDesdeMemoria addr
 
 cargaraDesdeMemoria :: Posicion -> Microprocesador -> Microprocesador
-cargaraDesdeMemoria addr unMicrocontrolador = unMicrocontrolador { acumuladorA = (memoriaDeDatos unMicrocontrolador) !! (addr-1) }
+cargaraDesdeMemoria addr unMicrocontrolador = unMicrocontrolador { acumuladorA = (memoriaDeDatos unMicrocontrolador) !! addr }
 
 --PUNTO 3.4.2
 dividir2por0 :: Micro
