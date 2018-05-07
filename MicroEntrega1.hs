@@ -21,6 +21,8 @@ xt8088 = Microprocesador { memoriaDeDatos=[], acumuladorA = 0, acumuladorB = 0, 
 nop :: Micro
 nop unMicrocontrolador = unMicrocontrolador {programCounter = programCounter unMicrocontrolador + 1} 
 
+-- comentario
+
 --PUNTO 3.2.2
 avanzarTresVecespc :: Micro
 avanzarTresVecespc = nop.nop.nop
