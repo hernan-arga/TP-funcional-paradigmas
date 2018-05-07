@@ -9,7 +9,7 @@
 module MicroEntrega1 where
 
 --PUNTO 3.1
-type Micro = Microprocesador -> Microprocesador
+type Instruccion = Microprocesador -> Microprocesador
 type Valor = Int
 type Posicion = Int
 
@@ -17,71 +17,76 @@ data Microprocesador = Microprocesador { memoriaDeDatos :: [Int], acumuladorA ::
 
 xt8088 = Microprocesador { memoriaDeDatos=[], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "" }
 
+-- AGREGADO
+program :: Microprocesador -> [(Instruccion)] -> Microprocesador
+program unMicrocontrolador = foldl1 (.) 
+
 --PUNTO 3.2.1
-nop :: Micro
+nop :: Instruccion
 nop unMicrocontrolador = unMicrocontrolador {programCounter = programCounter unMicrocontrolador + 1} 
 
--- comentario
-
 --PUNTO 3.2.2
-avanzarTresVecespc :: Micro
+avanzarTresVecespc :: Instruccion
 avanzarTresVecespc = nop.nop.nop
+listaAvanzarTresVecespc = [nop, nop, nop]
 
 --PUNTO 3.3.1
-lodv :: Valor -> Microprocesador -> Microprocesador
+lodv :: Valor -> Instruccion
 lodv val = nop.cargarValorEnAcumuladorA val
 
-cargarValorEnAcumuladorA :: Valor -> Microprocesador -> Microprocesador
+cargarValorEnAcumuladorA :: Valor -> Instruccion
 cargarValorEnAcumuladorA val unMicrocontrolador = unMicrocontrolador {acumuladorA = val}
 
-swap :: Micro
+swap :: Instruccion
 swap = nop.intercambiarValores
 
-intercambiarValores :: Micro
+intercambiarValores :: Instruccion
 intercambiarValores unMicrocontrolador = unMicrocontrolador {acumuladorA = acumuladorB unMicrocontrolador, acumuladorB = acumuladorA unMicrocontrolador}
 
-add :: Micro
+add :: Instruccion
 add = nop.sumarValores
 
-sumarValores :: Micro
+sumarValores :: Instruccion
 sumarValores unMicrocontrolador = unMicrocontrolador {acumuladorA = acumuladorB unMicrocontrolador + acumuladorA unMicrocontrolador, acumuladorB = 0}
 
 --PUNTO 3.3.2
-sumar10mas22 :: Micro
+sumar10mas22 :: Instruccion
 sumar10mas22 = add.lodv 22.swap.lodv 10
+listaFuncionesDeSumar10 = [add, (lodv 22), swap, (lodv 10)]
 
 --PUNTO 3.4.1
-divide :: Micro
+divide :: Instruccion
 divide = nop.dividirAcumuladores
 
-dividirAcumuladores :: Micro
+dividirAcumuladores :: Instruccion
 dividirAcumuladores unMicrocontrolador
     | acumuladorB unMicrocontrolador == 0 = unMicrocontrolador {etiqueta = "ERROR DIVISION BY ZERO"} 
     | otherwise =  unMicrocontrolador { acumuladorA = quot (acumuladorA unMicrocontrolador) (acumuladorB unMicrocontrolador), acumuladorB = 0} 
 
-str :: Posicion -> Valor -> Microprocesador -> Microprocesador
+str :: Posicion -> Valor -> Instruccion
 str addr val = nop.guardarValorEnMemoria addr val
 
-guardarValorEnMemoria :: Posicion -> Valor -> Microprocesador -> Microprocesador
+guardarValorEnMemoria :: Posicion -> Valor -> Instruccion
 guardarValorEnMemoria addr val unMicrocontrolador = unMicrocontrolador { memoriaDeDatos = ( take addr (memoriaDeDatos unMicrocontrolador) ) ++ [val] ++ ( drop addr (memoriaDeDatos unMicrocontrolador) )}
 
-lod :: Posicion -> Microprocesador -> Microprocesador
+lod :: Posicion -> Instruccion
 lod addr = nop.cargaraDesdeMemoria addr
 
-cargaraDesdeMemoria :: Posicion -> Microprocesador -> Microprocesador
+cargaraDesdeMemoria :: Posicion -> Instruccion
 cargaraDesdeMemoria addr unMicrocontrolador = unMicrocontrolador { acumuladorA = (memoriaDeDatos unMicrocontrolador) !! addr }
 
 --PUNTO 3.4.2
-dividir2por0 :: Micro
+dividir2por0 :: Instruccion
 dividir2por0 = divide.lod 1.swap.lod 2.str 2 0.str 1 2
-
+listaFuncionesDividir2por0 = [divide, (lod 1), swap, (lod 2), (str 2 0), (str 1 2)]
 
 -- CASOS DE PRUEBA 
 fp20 = Microprocesador {memoriaDeDatos=[], acumuladorA = 7, acumuladorB = 24, programCounter = 0, etiqueta = ""}
 
 at8086 = Microprocesador {memoriaDeDatos=[1..20], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = ""}
 
-dividir12por4 :: Micro
+dividir12por4 :: Instruccion
 dividir12por4 = divide . lod 1 . swap . lod 2 . str 2 4 . str 1 12
+listaDividir12Por4 = [divide, (lod 1), swap, (lod 2), (str 2 4), (str 1 12)]
 
 testxt8088 = Microprocesador { memoriaDeDatos= replicate 1024 0, acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = ""}
