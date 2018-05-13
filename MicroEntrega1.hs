@@ -1,11 +1,11 @@
---     TP Funcional 2018 - Microprocesador - Primera entrega
+﻿--     TP Funcional 2018 - Microprocesador - Primera entrega
 --     Paradigmas de Programación
 --     Realizado por: 
 --					del Burgo, María Abril
 --					Gagliardi, Diego
 --					Laye, Matías
 --					Rodríguez Cary, Hernán
-
+--hola
 module MicroEntrega1 where
 
 --PUNTO 3.1
