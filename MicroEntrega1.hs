@@ -19,7 +19,7 @@ xt8088 = Microprocesador { memoriaDeDatos=[], acumuladorA = 0, acumuladorB = 0, 
 
 -- AGREGADO
 program :: Microprocesador -> [(Instruccion)] -> Microprocesador
-program unMicrocontrolador = foldl1 (.) 
+program unMicrocontrolador lista = (foldl1 (.) lista) unMicrocontrolador
 
 --PUNTO 3.2.1
 nop :: Instruccion
