@@ -13,7 +13,7 @@ type Instruccion = Microprocesador -> Microprocesador
 type Valor = Int
 type Posicion = Int
 data Microprocesador = Microprocesador { memoriaDeDatos :: [Int], acumuladorA :: Int, acumuladorB :: Int, programCounter :: Int, etiqueta :: String, memoriaDeProgramas :: [(Instruccion)] } deriving(Show)
---probando2
+--probando2333
 xt8088 = Microprocesador { memoriaDeDatos=[], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas= [add, (lodv 22), swap, (lodv 10),divide, (lod 1), swap, (lod 2), (str 2 0), (str 1 2)] }
 
 -- PUNTO 3.1 ENTREGA 2
