@@ -20,20 +20,28 @@ xt8088 = Microprocesador { memoriaDeDatos=[], acumuladorA = 0, acumuladorB = 0, 
 cargarPrograma :: Microprocesador->[(Instruccion)]->Microprocesador
 cargarPrograma unMicrocontrolador instrucciones = unMicrocontrolador {memoriaDeProgramas = memoriaDeProgramas unMicrocontrolador ++ instrucciones}
 
-sumar10mas22 :: Instruccion
+{-sumar10mas22 :: Instruccion
 sumar10mas22 unMicrocontrolador = (program.(cargarPrograma unMicrocontrolador)) [add,lodv 22,swap,lodv 10]
 listaFuncionesDeSumar10Mas22 = [add, (lodv 22), swap, (lodv 10)]
 
 dividir2por0 :: Instruccion
 dividir2por0 unMicrocontrolador = (program.(cargarPrograma unMicrocontrolador)) [divide,lod 1,swap,lod 2,str 2 0,str 1 2]
-listaFuncionesDividir2por0 = [divide, (lod 1), swap, (lod 2), (str 2 0), (str 1 2)]
+listaFuncionesDividir2por0 = [divide, (lod 1), swap, (lod 2), (str 2 0), (str 1 2)]-}
 
 --PUNTO 3.2 ENTREGA 2
 --program :: Instruccion
-program unMicrocontrolador
+
+--program unMicrocontrolador = program (comprobar.ejecutar)
+
+ejecutar unMicrocontrolador = (head (memoriaDeProgramas unMicrocontrolador)) unMicrocontrolador
+
+--comprobar = etiqueta /= ""
+{-program unMicrocontrolador
     | etiqueta unMicrocontrolador /= "" = unMicrocontrolador
     | otherwise = (foldr1 (.) (memoriaDeProgramas unMicrocontrolador) ) unMicrocontrolador
-operarDosFunciones unMicrocontrolador = foldl1 (.) (take 2 (memoriaDeProgramas unMicrocontrolador)) 
+operarDosFunciones unMicrocontrolador = foldl1 (.) (take 2 (memoriaDeProgramas unMicrocontrolador)) -}
+
+
 
 --PUNTO 3.2.1
 nop :: Instruccion
