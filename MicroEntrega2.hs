@@ -1,4 +1,4 @@
-﻿--     TP Funcional 2018 - Microprocesador - Primera entrega
+﻿--     TP Funcional 2018 - Microprocesador - Segunda entrega
 --     Paradigmas de Programación
 --     Realizado por: 
 --					del Burgo, María Abril
@@ -14,26 +14,29 @@ type Valor = Int
 type Posicion = Int
 data Microprocesador = Microprocesador { memoriaDeDatos :: [Int], acumuladorA :: Int, acumuladorB :: Int, programCounter :: Int, etiqueta :: String, memoriaDeProgramas :: [(Instruccion)] } deriving(Show)
 
-xt8088 = Microprocesador { memoriaDeDatos=[], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas= [add, (lodv 22), swap, (lodv 10),divide, (lod 1), swap, (lod 2), (str 2 0), (str 1 2)] }
+xt8088 = Microprocesador { memoriaDeDatos=[], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas= []}
 
 -- PUNTO 3.1 ENTREGA 2
 cargarPrograma :: Microprocesador->[(Instruccion)]->Microprocesador
 cargarPrograma unMicrocontrolador instrucciones = unMicrocontrolador {memoriaDeProgramas = memoriaDeProgramas unMicrocontrolador ++ instrucciones}
 
 sumar10mas22 :: Instruccion
-sumar10mas22 unMicrocontrolador = (program.(cargarPrograma unMicrocontrolador)) [add,lodv 22,swap,lodv 10]
-listaFuncionesDeSumar10Mas22 = [add, (lodv 22), swap, (lodv 10)]
+sumar10mas22 unMicrocontrolador = (ejecutarPrograma.(cargarPrograma unMicrocontrolador)) listaFuncionesDeSumar10Mas22
+listaFuncionesDeSumar10Mas22 = [(lodv 10), swap, (lodv 22), add]
 
 dividir2por0 :: Instruccion
-dividir2por0 unMicrocontrolador = (program.(cargarPrograma unMicrocontrolador)) [divide,lod 1,swap,lod 2,str 2 0,str 1 2]
-listaFuncionesDividir2por0 = [divide, (lod 1), swap, (lod 2), (str 2 0), (str 1 2)]
+dividir2por0 unMicrocontrolador = (ejecutarPrograma.(cargarPrograma unMicrocontrolador)) listaFuncionesDividir2por0
+listaFuncionesDividir2por0 = [(str 1 2), (str 2 0), (lod 2), swap, (lod 1), divide]
 
 --PUNTO 3.2 ENTREGA 2
---program :: Instruccion
-program unMicrocontrolador
-    | etiqueta unMicrocontrolador /= "" = unMicrocontrolador
-    | otherwise = (foldr1 (.) (memoriaDeProgramas unMicrocontrolador) ) unMicrocontrolador
-operarDosFunciones unMicrocontrolador = foldl1 (.) (take 2 (memoriaDeProgramas unMicrocontrolador)) 
+ejecutarPrograma :: Microprocesador->Microprocesador
+ejecutarPrograma unMicrocontrolador = ejecutarInstrucciones (memoriaDeProgramas unMicrocontrolador) unMicrocontrolador
+
+ejecutarInstrucciones:: [(Instruccion)]->Microprocesador->Microprocesador
+ejecutarInstrucciones [] unMicrocontrolador= unMicrocontrolador
+ejecutarInstrucciones (x:xs) (Microprocesador  memoriaDeDatos acumuladorA acumuladorB programCounter [] memoriaDeProgramas) = (ejecutarInstrucciones xs.x) (Microprocesador  memoriaDeDatos acumuladorA acumuladorB programCounter [] memoriaDeProgramas)
+ejecutarInstrucciones _ unMicrocontrolador = unMicrocontrolador
+
 
 --PUNTO 3.2.1
 nop :: Instruccion
