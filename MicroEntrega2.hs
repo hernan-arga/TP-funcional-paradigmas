@@ -13,11 +13,10 @@ import Text.Show.Functions
 type Instruccion = Microprocesador -> Microprocesador
 type Valor = Int
 type Posicion = Int
+
 data Microprocesador = Microprocesador { memoriaDeDatos :: [Int], acumuladorA :: Int, acumuladorB :: Int, programCounter :: Int, etiqueta :: String, memoriaDeProgramas :: [Instruccion] } deriving(Show)
 
 xt8088 = Microprocesador { memoriaDeDatos = [], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas = [] }
-
-
 
 --ENTREGA 1
 --PUNTO 3.2.1
@@ -84,18 +83,18 @@ testxt8088 = Microprocesador { memoriaDeDatos= replicate 1024 0, acumuladorA = 0
 
 --ENTREGA 2
 -- PUNTO 1 
-cargarPrograma :: Microprocesador -> [Instruccion] -> Microprocesador
-cargarPrograma unMicrocontrolador listaDeInstrucciones = unMicrocontrolador {memoriaDeProgramas = memoriaDeProgramas unMicrocontrolador ++ listaDeInstrucciones}
+cargarPrograma :: [Instruccion] -> Microprocesador -> Microprocesador
+cargarPrograma listaDeInstrucciones unMicrocontrolador = unMicrocontrolador {memoriaDeProgramas = memoriaDeProgramas unMicrocontrolador ++ listaDeInstrucciones}
 
 listaFuncionesDeSumar10Mas22 = [(lodv 10), swap, (lodv 22), add]
 
 sumar10mas22 :: Instruccion
-sumar10mas22 unMicrocontrolador = (ejecutarPrograma.(cargarPrograma unMicrocontrolador)) listaFuncionesDeSumar10Mas22
+sumar10mas22 = ejecutarPrograma.cargarPrograma listaFuncionesDeSumar10Mas22
 
 listaFuncionesDividir2por0 = [(str 1 2), (str 2 0), (lod 2), swap, (lod 1), divide]
 
 dividir2por0 :: Instruccion
-dividir2por0 unMicrocontrolador = (ejecutarPrograma.(cargarPrograma unMicrocontrolador)) listaFuncionesDividir2por0
+dividir2por0 = ejecutarPrograma.cargarPrograma listaFuncionesDividir2por0
 
 -- PUNTO 2
 ejecutarPrograma :: Instruccion
@@ -107,7 +106,6 @@ ejecutarInstrucciones (x:xs) (Microprocesador  memoriaDeDatos acumuladorA acumul
 ejecutarInstrucciones _ unMicrocontrolador = unMicrocontrolador
 
 -- PUNTO 3 / ejecuta una serie de instrucciones en caso de que el acumulador A no tenga el valor 0.
-
 ifnz :: [Instruccion] -> Instruccion
 ifnz listaDeInstrucciones (Microprocesador memoriaDeDatos 0 acumuladorB programCounter etiqueta memoriaDeProgramas) = (Microprocesador memoriaDeDatos 0 acumuladorB programCounter etiqueta memoriaDeProgramas)
 ifnz listaDeInstrucciones unMicrocontrolador = ejecutarInstrucciones listaDeInstrucciones unMicrocontrolador
@@ -117,7 +115,7 @@ ifnz listaDeInstrucciones unMicrocontrolador = ejecutarInstrucciones listaDeInst
 
 -- PUNTO 5
 memoriaEstaOrdenada :: Microprocesador -> Bool
-memoriaEstaOrdenada unMicrocontrolador = listaOrdenada (memoriaDeDatos unMicrocontrolador)
+memoriaEstaOrdenada = listaOrdenada.memoriaDeDatos
 
 listaOrdenada :: Ord a => [a] -> Bool
 listaOrdenada [] = True
@@ -129,6 +127,7 @@ listaOrdenada (x:y:xs) = (x <= y) && listaOrdenada (y:xs)
 superMicroprocesador = Microprocesador { memoriaDeDatos = [0..], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas = [] }
 -- item 2. la memoria de datos muestra en consola su contenido hasta que se llene la memoria
 -- item 3. no muestra True o False ya que esta analizando una lista infinita
+-- item 4. 
 
 -- CASOS DE PRUEBA
 microDesorden = Microprocesador { memoriaDeDatos = [2,5,1,0,6,9], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas = [] }
