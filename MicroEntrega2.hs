@@ -106,13 +106,14 @@ ejecutarInstrucciones [] unMicrocontrolador= unMicrocontrolador
 ejecutarInstrucciones (x:xs) (Microprocesador  memoriaDeDatos acumuladorA acumuladorB programCounter [] memoriaDeProgramas) = (ejecutarInstrucciones xs.x) (Microprocesador  memoriaDeDatos acumuladorA acumuladorB programCounter [] memoriaDeProgramas)
 ejecutarInstrucciones _ unMicrocontrolador = unMicrocontrolador
 
--- PUNTO 3
---ifnz :: [Instruccion] -> Instruccion
---ifnz listaDeInstrucciones (Microprocesador memoriaDeDatos 0 acumuladorB programCounter etiqueta memoriaDeProgramas) = (Microprocesador memoriaDeDatos acumuladorA acumuladorB programCounter etiqueta memoriaDeProgramas)
---ifnz listaDeInstrucciones unMicrocontrolador = ejecutarInstrucciones listaDeInstrucciones unMicrocontrolador
---ifnz _ unMicrocontrolador = (Microprocesador memoriaDeDatos acumuladorA acumuladorB programCounter etiqueta memoriaDeProgramas) -- es necesaria esta o se reemplaza x la segunda?
+-- PUNTO 3 / ejecuta una serie de instrucciones en caso de que el acumulador A no tenga el valor 0.
+
+ifnz :: [Instruccion] -> Instruccion
+ifnz listaDeInstrucciones (Microprocesador memoriaDeDatos 0 acumuladorB programCounter etiqueta memoriaDeProgramas) = (Microprocesador memoriaDeDatos 0 acumuladorB programCounter etiqueta memoriaDeProgramas)
+ifnz listaDeInstrucciones unMicrocontrolador = ejecutarInstrucciones listaDeInstrucciones unMicrocontrolador
 
 -- PUNTO 4
+
 
 -- PUNTO 5
 memoriaEstaOrdenada :: Microprocesador -> Bool
@@ -120,10 +121,14 @@ memoriaEstaOrdenada unMicrocontrolador = listaOrdenada (memoriaDeDatos unMicroco
 
 listaOrdenada :: Ord a => [a] -> Bool
 listaOrdenada [] = True
+listaOrdenada [_] = True
 listaOrdenada (x:y:xs) = (x <= y) && listaOrdenada (y:xs) 
 
 -- PUNTO 6
 -- item 1
 superMicroprocesador = Microprocesador { memoriaDeDatos = [0..], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas = [] }
 -- item 2. la memoria de datos muestra en consola su contenido hasta que se llene la memoria
--- no muestra True o False ya que esta analizando una lista infinita
+-- item 3. no muestra True o False ya que esta analizando una lista infinita
+
+-- CASOS DE PRUEBA
+microDesorden = Microprocesador { memoriaDeDatos = [2,5,1,0,6,9], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas = [] }
