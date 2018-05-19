@@ -1,4 +1,4 @@
-﻿--     TP Funcional 2018 - Microprocesador - Segunda entrega
+--     TP Funcional 2018 - Microprocesador - Segunda entrega
 --     Paradigmas de Programación
 --     Realizado por: 
 --					del Burgo, María Abril
@@ -6,38 +6,20 @@
 --					Laye, Matías
 --					Rodríguez Cary, Hernán
 
-module MicroEntrega1 where
+module MicroEntrega2 where
 import Text.Show.Functions
+
 --PUNTO 3.1
 type Instruccion = Microprocesador -> Microprocesador
 type Valor = Int
 type Posicion = Int
-data Microprocesador = Microprocesador { memoriaDeDatos :: [Int], acumuladorA :: Int, acumuladorB :: Int, programCounter :: Int, etiqueta :: String, memoriaDeProgramas :: [(Instruccion)] } deriving(Show)
+data Microprocesador = Microprocesador { memoriaDeDatos :: [Int], acumuladorA :: Int, acumuladorB :: Int, programCounter :: Int, etiqueta :: String, memoriaDeProgramas :: [Instruccion] } deriving(Show)
 
-xt8088 = Microprocesador { memoriaDeDatos=[], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas= []}
-
--- PUNTO 3.1 ENTREGA 2
-cargarPrograma :: Microprocesador->[(Instruccion)]->Microprocesador
-cargarPrograma unMicrocontrolador instrucciones = unMicrocontrolador {memoriaDeProgramas = memoriaDeProgramas unMicrocontrolador ++ instrucciones}
-
-sumar10mas22 :: Instruccion
-sumar10mas22 unMicrocontrolador = (ejecutarPrograma.(cargarPrograma unMicrocontrolador)) listaFuncionesDeSumar10Mas22
-listaFuncionesDeSumar10Mas22 = [(lodv 10), swap, (lodv 22), add]
-
-dividir2por0 :: Instruccion
-dividir2por0 unMicrocontrolador = (ejecutarPrograma.(cargarPrograma unMicrocontrolador)) listaFuncionesDividir2por0
-listaFuncionesDividir2por0 = [(str 1 2), (str 2 0), (lod 2), swap, (lod 1), divide]
-
---PUNTO 3.2 ENTREGA 2
-ejecutarPrograma :: Microprocesador->Microprocesador
-ejecutarPrograma unMicrocontrolador = ejecutarInstrucciones (memoriaDeProgramas unMicrocontrolador) unMicrocontrolador
-
-ejecutarInstrucciones:: [(Instruccion)]->Microprocesador->Microprocesador
-ejecutarInstrucciones [] unMicrocontrolador= unMicrocontrolador
-ejecutarInstrucciones (x:xs) (Microprocesador  memoriaDeDatos acumuladorA acumuladorB programCounter [] memoriaDeProgramas) = (ejecutarInstrucciones xs.x) (Microprocesador  memoriaDeDatos acumuladorA acumuladorB programCounter [] memoriaDeProgramas)
-ejecutarInstrucciones _ unMicrocontrolador = unMicrocontrolador
+xt8088 = Microprocesador { memoriaDeDatos = [], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas = [] }
 
 
+
+--ENTREGA 1
 --PUNTO 3.2.1
 nop :: Instruccion
 nop unMicrocontrolador = unMicrocontrolador {programCounter = programCounter unMicrocontrolador + 1} 
@@ -66,9 +48,6 @@ add = nop.sumarValores
 sumarValores :: Instruccion
 sumarValores unMicrocontrolador = unMicrocontrolador {acumuladorA = acumuladorB unMicrocontrolador + acumuladorA unMicrocontrolador, acumuladorB = 0}
 
---PUNTO 3.3.2
-
-
 --PUNTO 3.4.1
 divide :: Instruccion
 divide = nop.dividirAcumuladores
@@ -90,9 +69,6 @@ lod addr = nop.cargaraDesdeMemoria addr
 cargaraDesdeMemoria :: Posicion -> Instruccion
 cargaraDesdeMemoria addr unMicrocontrolador = unMicrocontrolador { acumuladorA = (memoriaDeDatos unMicrocontrolador) !! (addr-1) }
 
---PUNTO 3.4.2
-
-
 -- CASOS DE PRUEBA 
 fp20 = Microprocesador {memoriaDeDatos=[], acumuladorA = 7, acumuladorB = 24, programCounter = 0, etiqueta = "", memoriaDeProgramas=[]}
 
@@ -102,4 +78,52 @@ dividir12por4 :: Instruccion
 dividir12por4 = divide . lod 1 . swap . lod 2 . str 2 4 . str 1 12
 listaDividir12Por4 = [divide,(lod 1),swap,(lod 2),(str 2 4),(str 1 12)]
 
-testxt8088 = Microprocesador { memoriaDeDatos= replicate 1024 0, acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas=[]}
+testxt8088 = Microprocesador { memoriaDeDatos= replicate 1024 0, acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas = []}
+
+
+
+--ENTREGA 2
+-- PUNTO 1 
+cargarPrograma :: Microprocesador -> [Instruccion] -> Microprocesador
+cargarPrograma unMicrocontrolador listaDeInstrucciones = unMicrocontrolador {memoriaDeProgramas = memoriaDeProgramas unMicrocontrolador ++ listaDeInstrucciones}
+
+listaFuncionesDeSumar10Mas22 = [(lodv 10), swap, (lodv 22), add]
+
+sumar10mas22 :: Instruccion
+sumar10mas22 unMicrocontrolador = (ejecutarPrograma.(cargarPrograma unMicrocontrolador)) listaFuncionesDeSumar10Mas22
+
+listaFuncionesDividir2por0 = [(str 1 2), (str 2 0), (lod 2), swap, (lod 1), divide]
+
+dividir2por0 :: Instruccion
+dividir2por0 unMicrocontrolador = (ejecutarPrograma.(cargarPrograma unMicrocontrolador)) listaFuncionesDividir2por0
+
+-- PUNTO 2
+ejecutarPrograma :: Instruccion
+ejecutarPrograma unMicrocontrolador = ejecutarInstrucciones (memoriaDeProgramas unMicrocontrolador) unMicrocontrolador
+
+ejecutarInstrucciones :: [Instruccion] -> Instruccion
+ejecutarInstrucciones [] unMicrocontrolador= unMicrocontrolador
+ejecutarInstrucciones (x:xs) (Microprocesador  memoriaDeDatos acumuladorA acumuladorB programCounter [] memoriaDeProgramas) = (ejecutarInstrucciones xs.x) (Microprocesador  memoriaDeDatos acumuladorA acumuladorB programCounter [] memoriaDeProgramas)
+ejecutarInstrucciones _ unMicrocontrolador = unMicrocontrolador
+
+-- PUNTO 3
+--ifnz :: [Instruccion] -> Instruccion
+--ifnz listaDeInstrucciones (Microprocesador memoriaDeDatos 0 acumuladorB programCounter etiqueta memoriaDeProgramas) = (Microprocesador memoriaDeDatos acumuladorA acumuladorB programCounter etiqueta memoriaDeProgramas)
+--ifnz listaDeInstrucciones unMicrocontrolador = ejecutarInstrucciones listaDeInstrucciones unMicrocontrolador
+--ifnz _ unMicrocontrolador = (Microprocesador memoriaDeDatos acumuladorA acumuladorB programCounter etiqueta memoriaDeProgramas) -- es necesaria esta o se reemplaza x la segunda?
+
+-- PUNTO 4
+
+-- PUNTO 5
+memoriaEstaOrdenada :: Microprocesador -> Bool
+memoriaEstaOrdenada unMicrocontrolador = listaOrdenada (memoriaDeDatos unMicrocontrolador)
+
+listaOrdenada :: Ord a => [a] -> Bool
+listaOrdenada [] = True
+listaOrdenada (x:y:xs) = (x <= y) && listaOrdenada (y:xs) 
+
+-- PUNTO 6
+-- item 1
+superMicroprocesador = Microprocesador { memoriaDeDatos = [0..], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas = [] }
+-- item 2. la memoria de datos muestra en consola su contenido hasta que se llene la memoria
+-- no muestra True o False ya que esta analizando una lista infinita
