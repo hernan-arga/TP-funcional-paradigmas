@@ -127,7 +127,7 @@ listaOrdenada (x:y:xs) = (x <= y) && listaOrdenada (y:xs)
 superMicroprocesador = Microprocesador { memoriaDeDatos = [0..], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas = [] }
 -- item 2. la memoria de datos muestra en consola su contenido hasta que se llene la memoria
 -- item 3. no muestra True o False ya que esta analizando una lista infinita
--- item 4. 
+-- item 4. Al utilizar una lista de números infinita, el programa no podrá concluirse ya que nunca llega a terminar de procesar dicha lista
 
 -- CASOS DE PRUEBA
 microDesorden = Microprocesador { memoriaDeDatos = [2,5,1,0,6,9], acumuladorA = 0, acumuladorB = 0, programCounter = 0, etiqueta = "", memoriaDeProgramas = [] }
