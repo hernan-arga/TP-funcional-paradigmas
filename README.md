@@ -40,9 +40,8 @@ DIV       // Intento hacer la división
 Ejecutar un programa que esté cargado en el microcontrolador. Esto consiste en
 avanzar el program counter
 ejecutar la instrucción
-cuando una instrucción salga con error el programa no debe ejecutar ninguna otra instrucción posterior (ni avanzar el program counter de aquí en más)
+cuando una instrucción salga con error el programa no debe ejecutar ninguna otra instrucción posterior (ni avanzar el program counter de aquí en más). En la entrega anterior es posible que en cada instrucción hayas avanzado el program counter, es una buena oportunidad para refactorizar esto.
 
-En la entrega anterior es posible que en cada instrucción hayas avanzado el program counter, es una buena oportunidad para refactorizar esto.
 3.3 Punto 3: IFNZ
 ==================================
 Modelar la instrucción múltiple IFNZ, que ejecutará una serie de instrucciones en caso de que el acumulador A no tenga el valor 0.
@@ -56,6 +55,7 @@ SWAP      // Invierto los acumuladores
 Y lo ejecutamos en el microprocesador fp20, en el acumulador A debe quedar 24, y en el B el valor 3. No nos interesa cómo queda el program counter ya que el usuario todavía no lo definió.
 
 En caso de error en alguna de las instrucciones, el resto no debe ejecutarse.
+
 3.4 Punto 4: Depuración de un programa
 ==================================
 Queremos depurar un programa, que consiste en eliminar todas las instrucciones innecesarias, es decir, las que luego de ejecutarse en un micro (el microprocesador xt8088  es utilizado como caso testigo), dejan en cero el acumulador A, el B y todas las celdas de memoria (de datos).
